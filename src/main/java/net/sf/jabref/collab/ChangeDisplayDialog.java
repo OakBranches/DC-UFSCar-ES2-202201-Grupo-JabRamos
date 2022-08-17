@@ -34,6 +34,7 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 
 import net.sf.jabref.gui.BasePanel;
 import net.sf.jabref.gui.undo.NamedCompound;
@@ -100,12 +101,12 @@ class ChangeDisplayDialog extends JDialog implements TreeSelectionListener {
             // Perform all accepted changes:
             // Store all edits in an Undoable object:
             NamedCompound ce = new NamedCompound(Localization.lang("Merged external changes"));
-            Enumeration<Change> enumer = root.children();
+            Enumeration<TreeNode> enumer = root.children();
             boolean anyDisabled = false;
-            for (Change c : Collections.list(enumer)) {
+            for (TreeNode c : Collections.list(enumer)) {
                 boolean allAccepted = false;
-                if (c.isAcceptable() && c.isAccepted()) {
-                    allAccepted = c.makeChange(panel, localSecondary, ce);
+                if (((Change) c).isAcceptable() && ((Change) c).isAccepted()) {
+                    allAccepted = ((Change) c).makeChange(panel, localSecondary, ce);
                 }
 
                 if (!allAccepted) {
