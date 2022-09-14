@@ -24,6 +24,7 @@ import java.text.FieldPosition;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.time.Year;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -370,6 +371,31 @@ public class BibEntry {
             // We set the field before throwing the changeEvent, to enable
             // the change listener to access the new value if the change
             // sets off a change in database sorting etc.
+            if (fieldName.equals("year")) {
+
+                if (value.isEmpty() || (value.length() == 0)) {
+                    throw new IllegalArgumentException("This Article/Book's year entry is empty");
+                }
+
+                try {
+                    Integer year = Integer.parseUnsignedInt(value);
+
+                    int yearNow = Year.now().getValue();
+
+                    if ((year == 0) || (year == null)) {
+                        throw new IllegalArgumentException("This Article/Book's year doesn't exist (year 0)");
+                    }
+
+
+                    if (year > (yearNow + 3)) {
+                        throw new IllegalArgumentException("This Article/Book's year is in the future");
+                    }
+
+
+                } catch (NumberFormatException ex) {
+                    throw new IllegalArgumentException("The field year is invalid");
+                }
+            }
             fields.put(fieldName, value);
             firePropertyChangedEvent(fieldName, oldValue, value);
         } catch (PropertyVetoException pve) {
