@@ -23,6 +23,7 @@ import java.util.TreeSet;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
+import javax.swing.tree.TreeNode;
 
 import net.sf.jabref.gui.BasePanel;
 import net.sf.jabref.gui.undo.NamedCompound;
@@ -86,10 +87,10 @@ class EntryChange extends Change {
     public boolean makeChange(BasePanel panel, BibDatabase secondary, NamedCompound undoEdit) {
         boolean allAccepted = true;
 
-        Enumeration<Change> e = children();
-        for (Change c : Collections.list(e)) {
-            if (c.isAcceptable() && c.isAccepted()) {
-                c.makeChange(panel, secondary, undoEdit);
+        Enumeration<TreeNode> e = children();
+        for (TreeNode c : Collections.list(e)) {
+            if (((Change) c).isAcceptable() && ((Change) c).isAccepted()) {
+                ((EntryChange) c).makeChange(panel, secondary, undoEdit);
             } else {
                 allAccepted = false;
             }

@@ -1412,12 +1412,22 @@ public class LabelPatternUtil {
         }
 
         StringBuilder newKey = new StringBuilder();
+        int counter = 0;
         for (int i = 0; i < key.length(); i++) {
             char c = key.charAt(i);
             if (!Character.isWhitespace(c) && ("{}(),\\\"#~^'".indexOf(c) == -1)) {
-                newKey.append(c);
+                if (((counter == 0) && Character.isAlphabetic(c)) || (counter > 0)) {
+                    newKey.append(c);
+                    counter++;
+                }
             }
         }
+        if (counter < 2) {
+            while (newKey.length() > 0) {
+                newKey.deleteCharAt(0);
+            }
+        }
+
 
         // Replace non-English characters like umlauts etc. with a sensible
         // letter or letter combination that bibtex can accept.
